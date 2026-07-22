@@ -1,6 +1,6 @@
 {
   "name": "megan-baileys",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Lightweight WhatsApp Web API with multi-session support. Forked from Gifted Baileys 2.5.8 + latest WA protocol. Created by TrackerWanga.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

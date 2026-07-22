@@ -1,16 +1,24 @@
-// Creates @whiskeysockets/baileys alias pointing to megan-baileys
-// This is needed for packages like gifted-btns that import from @whiskeysockets/baileys
+// Creates @whiskeysockets/baileys alias in the CONSUMER's node_modules
+// This runs from node_modules/megan-baileys/scripts/
+// We need to go up 3 levels to reach the consumer's project root
 const fs = require('fs');
 const path = require('path');
 
-const target = path.join(__dirname, '..', 'node_modules', '@whiskeysockets');
-const alias = path.join(target, 'baileys');
+// From: node_modules/megan-baileys/scripts/postinstall.js
+// To:   node_modules/@whiskeysockets/baileys
+const consumerRoot = path.join(__dirname, '..', '..', '..');
+const targetDir = path.join(consumerRoot, 'node_modules', '@whiskeysockets');
+const baileysDir = path.join(targetDir, 'baileys');
 
-fs.mkdirSync(target, { recursive: true });
-try { fs.rmSync(alias, { recursive: true, force: true }); } catch(e) {}
-fs.mkdirSync(alias, { recursive: true });
+fs.mkdirSync(targetDir, { recursive: true });
 
-fs.writeFileSync(path.join(alias, 'package.json'), JSON.stringify({
+// Remove old if exists
+try { fs.rmSync(baileysDir, { recursive: true, force: true }); } catch(e) {}
+
+fs.mkdirSync(baileysDir, { recursive: true });
+
+// Write package.json that points back to megan-baileys
+fs.writeFileSync(path.join(baileysDir, 'package.json'), JSON.stringify({
     name: "@whiskeysockets/baileys",
     version: "1.0.0",
     type: "module",
@@ -23,4 +31,4 @@ fs.writeFileSync(path.join(alias, 'package.json'), JSON.stringify({
     }
 }, null, 2));
 
-console.log('✅ megan-baileys: @whiskeysockets/baileys alias ready');
+console.log('✅ megan-baileys: @whiskeysockets/baileys alias ready at ' + baileysDir);
